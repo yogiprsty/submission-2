@@ -33,50 +33,55 @@ const getStandings = () => {
                     let tableHTML = ``;
                     for (let i = 0; i < std.length; i += 3) {
                         tableHTML += `
-                <h5>${std[i].group.replace("_", " ")}</h5>
-                <table class="highlight">
-                    <thead>
-                        <tr>
-                            <th class="xsmall">Club</th>
-                            <th></th>
-                            <th class="small">W</th>
-                            <th class="small">D</th>
-                            <th class="small">L</th>
-                            <th class="small">MP</th>
-                            <th class="small">GF</th>
-                            <th class="small">GA</th>
-                            <th class="small">GD</th>
-                            <th class="small">Pts</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                `;
+                            <h5>${std[i].group.replace("_", " ")}</h5>
+                            <table class="highlight">
+                                <thead>
+                                    <tr>
+                                        <th class="xsmall">Club</th>
+                                        <th></th>
+                                        <th class="small">W</th>
+                                        <th class="small">D</th>
+                                        <th class="small">L</th>
+                                        <th class="small">MP</th>
+                                        <th class="small">GF</th>
+                                        <th class="small">GA</th>
+                                        <th class="small">GD</th>
+                                        <th class="small">Pts</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                        `;
                         std[i].table.forEach(info => {
                             tableHTML += `
-                    <tr>
-                        <td>
-                            <img src="${info.team.crestUrl}" alt="${info.team.name}-logo" height="30px">
-                        </td>
-                        <td>${info.team.name}</td>
-                        <td>${info.won}</td>
-                        <td>${info.draw}</td>
-                        <td>${info.lost}</td>
-                        <td>${info.playedGames}</td>
-                        <td>${info.goalsFor}</td>
-                        <td>${info.goalsAgainst}</td>
-                        <td>${info.goalDifference}</td>
-                        <td>${info.points}</td>
-                    </tr>
-                    `;
+                            <tr>
+                                <td>
+                                    <img src="${info.team.crestUrl}" alt="${info.team.name}-logo" height="30px">
+                                </td>
+                                <td>${info.team.name}</td>
+                                <td>${info.won}</td>
+                                <td>${info.draw}</td>
+                                <td>${info.lost}</td>
+                                <td>${info.playedGames}</td>
+                                <td>${info.goalsFor}</td>
+                                <td>${info.goalsAgainst}</td>
+                                <td>${info.goalDifference}</td>
+                                <td>${info.points}</td>
+                            </tr>
+                            `;
                         });
                         tableHTML += `
-                    </tbody>
-                </table>
-                `;
+                            </tbody>
+                        </table>
+                        `;
                     }
 
-                    // Sisipkan komponen card ke dalam elemen dengan id #content
+                    if (document.getElementById("standings-loader")) {
+                        document.getElementById("standings-loader").style.display = 'none';
+                    }
+                    // Sisipkan komponen card ke dalam elemen dengan id #standings
                     document.getElementById("standings").innerHTML = tableHTML;
+                    console.log('using cache standings');
+                    return;
                 })
             }
         })
@@ -150,12 +155,12 @@ const getStandings = () => {
 const getTeams = () => {
     return new Promise((resolve, reject) => {
         if ("caches" in window) {
-            console.log('getTeams Cache');
             caches.match(base_url + 'teams').then(response => {
                 if (response) {
                     response.json().then(data => {
                         const teams = data.teams;
                         let cardHtml = ``;
+                        // console.log('getTeams Cache');
                         teams.forEach(team => {
                             cardHtml += `
                             <div class="col s12 m6">
@@ -177,6 +182,14 @@ const getTeams = () => {
                             </div>
                             `;
                         });
+                        if (document.getElementById("teams-loader")) {
+                            document.getElementById("teams-loader").style.display = 'none';
+                        }
+                        // Sisipkan komponen card ke dalam elemen dengan id #team-lis
+                        document.getElementById("teams-list").innerHTML = cardHtml;
+                        resolve(data.teams)
+                        console.log('using cache teams');
+                        return;
                     });
                 }
             });

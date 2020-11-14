@@ -41,12 +41,9 @@ self.addEventListener("install", function (event) {
 });
 
 self.addEventListener("fetch", function (event) {
-    console.log("FETCH TERPANGGIL"); //del
-    const base_url_standings = "https://api.football-data.org/v2/competitions/CL/standings";
-    const base_url_teams = "https://api.football-data.org/v2/competitions/CL/teams";
+    const base_url = "https://api.football-data.org/v2/competitions/CL/";
 
-    if (event.request.url.indexOf(base_url_standings) > -1) {
-        console.log("IF FETCH STANDINGS TERPANGGIL"); //del
+    if (event.request.url.indexOf(base_url) > -1) {
         event.respondWith(
             caches.open(CACHE_NAME).then(function (cache) {
                 return fetch(event.request).then(function (response) {
@@ -55,19 +52,7 @@ self.addEventListener("fetch", function (event) {
                 })
             })
         );
-    }else if (event.request.url.indexOf(base_url_teams) > -1) {
-        console.log("IF FETCH Teams TERPANGGIL"); //del
-        event.respondWith(
-            caches.open(CACHE_NAME).then(function (cache) {
-                return fetch(event.request).then(function (response) {
-                    cache.put(event.request.url, response.clone());
-                    return response;
-                })
-            })
-        );
-    } 
-    else {
-        // console.log("ELSE FETCH TERPANGGIL"); //del
+    } else {
         event.respondWith(
             caches.match(event.request, { ignoreSearch: true }).then(function (response) {
                 return response || fetch(event.request);
