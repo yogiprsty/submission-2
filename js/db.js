@@ -1,9 +1,9 @@
 const dbPromised = idb.open('cl-info', 1, upgradeDb => {
     const favTeamsObjectStore = upgradeDb.createObjectStore('fav-teams',
-    {
-        keyPath: "id"
-    });
-    favTeamsObjectStore.createIndex('shortName', 'shortName', {unique: false});
+        {
+            keyPath: "id"
+        });
+    favTeamsObjectStore.createIndex('shortName', 'shortName', { unique: false });
 })
 
 const saveFavoriteTeam = (team) => {
@@ -11,14 +11,22 @@ const saveFavoriteTeam = (team) => {
         .then(db => {
             const tx = db.transaction("fav-teams", "readwrite");
             const store = tx.objectStore("fav-teams");
-            // disabledBtn(team.id);
             store.add(team);
             return tx.complete;
         })
-        .then(()=> console.log("Team tersimpan"))
-        .catch(()=>{
+        .then(() => console.log("Team tersimpan"))
+        .catch(() => {
             alert('Team sudah ada difavorite');
         })
+}
+
+const deleteFavoriteTeams = (id) => {
+    dbPromised.then(db => {
+        const tx = db.transaction("fav-teams", "readwrite");
+        const store = tx.objectStore("fav-teams");
+        store.delete(id);
+        return tx.complete;
+    }).then(() => console.log("Team terhapus"))
 }
 
 const getAllTeams = () => {

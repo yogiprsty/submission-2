@@ -255,6 +255,9 @@ const getFavorite = () => {
                                 <p><pre>Name        : ${team.name}</pre></p>
                                 <p><pre>E-mail      : ${team.email}</pre></p>
                             </div>
+                            <div class="card-action">
+                                <a href="#teams" id="fab-${team.id}" onclick="btnDel(${team.id})">Remove from Favorite</a>
+                            </div>
                         </div>
                     </div>
                 </div>

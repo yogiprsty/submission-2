@@ -8,3 +8,8 @@ function btnClick(id) {
         })
     })
 }
+
+function btnDel(id){
+    console.log(id);
+    deleteFavoriteTeams(id);
+}
